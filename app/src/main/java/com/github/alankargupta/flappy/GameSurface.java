@@ -1,13 +1,10 @@
 package com.github.alankargupta.flappy;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.WindowManager;
 
 /**
  * Created by alankargupta on 23/05/16.
@@ -15,39 +12,50 @@ import android.view.WindowManager;
 
 public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
 
-    private final int screenWidth;
-    private final int screenHeight;
+    private Context context;
+    public static int SCREEN_WIDTH =0;
+    public static int SCREEN_HEIGHT=0;
+    private RenderLoop renderLoop;
+    private Background background;
 
     public GameSurface(Context context, int screenWidth, int screenHight) {
         super(context);
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHight;
+        this.context = context;
+        SCREEN_WIDTH = screenWidth;
+        SCREEN_HEIGHT = screenHight;
         getHolder().addCallback(this);
     }
 
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        Canvas canvas = getHolder().lockCanvas();
-        draw(canvas);
-        getHolder().unlockCanvasAndPost(canvas);
+        background = new Background(context);
+        renderLoop = new RenderLoop(this);
+        renderLoop.setRunning(true);
+        new Thread(renderLoop).start();
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
+        /*renderLoop.setRunning(false);
+        renderLoop = null;*/
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
+        renderLoop.setRunning(false);
+        renderLoop = null;
+    }
 
+    public void update(){
+        background.update();
     }
 
     @Override
     public void draw(Canvas canvas) {
-        Bitmap background = BitmapFactory.decodeResource(getResources(),R.drawable.background);
-        Rect src = new Rect(0,0,background.getWidth(),background.getHeight());
-        Rect dest = new Rect(0,0,screenWidth,screenHeight);
-        canvas.drawBitmap(background,src,dest,null);
+        if(canvas==null)
+            return;
+        canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+        background.run(canvas);
     }
 }
