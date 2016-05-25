@@ -3,6 +3,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -12,6 +14,7 @@ import android.view.SurfaceView;
 
 public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
 
+    private static final String TAG = GameSurface.class.getSimpleName();
     private Context context;
     public static int SCREEN_WIDTH =0;
     public static int SCREEN_HEIGHT=0;
@@ -62,5 +65,13 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
         super.draw(canvas);
         background.run(canvas);
         bird.draw(canvas);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        Log.d(TAG,"Motion event "+event.getAction());
+        background.onTouchEvent(event);
+        bird.onTouchEvent(event);
+        return true;
     }
 }

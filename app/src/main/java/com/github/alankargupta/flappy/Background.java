@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.view.MotionEvent;
 
 import static com.github.alankargupta.flappy.GameSurface.FIXED_HEIGHT;
 import static com.github.alankargupta.flappy.GameSurface.FIXED_WIDTH;
@@ -39,6 +40,10 @@ public class Background extends GameObject {
         Rect dest2 = new Rect(x+width,y,x+width+width,height);
         canvas.drawBitmap(background,src,dest2,null);
         x=x<=-width?x+width:x;
+    }
+
+    public boolean onTouchEvent(MotionEvent event) {
+        return false;
     }
 
 }
