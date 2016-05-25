@@ -15,8 +15,11 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     private Context context;
     public static int SCREEN_WIDTH =0;
     public static int SCREEN_HEIGHT=0;
+    public static int FIXED_WIDTH =300;
+    public static int FIXED_HEIGHT=300;
     private RenderLoop renderLoop;
     private Background background;
+    private Bird bird;
 
     public GameSurface(Context context, int screenWidth, int screenHight) {
         super(context);
@@ -24,12 +27,14 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
         SCREEN_WIDTH = screenWidth;
         SCREEN_HEIGHT = screenHight;
         getHolder().addCallback(this);
+        getHolder().setFixedSize(SCREEN_WIDTH,SCREEN_HEIGHT);
     }
 
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         background = new Background(context);
+        bird = new Bird(context);
         renderLoop = new RenderLoop(this);
         renderLoop.setRunning(true);
         new Thread(renderLoop).start();
@@ -49,13 +54,13 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
 
     public void update(){
         background.update();
+        bird.update();
     }
 
     @Override
     public void draw(Canvas canvas) {
-        if(canvas==null)
-            return;
-        canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+        super.draw(canvas);
         background.run(canvas);
+        bird.draw(canvas);
     }
 }

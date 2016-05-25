@@ -3,8 +3,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Rect;
 
+import static com.github.alankargupta.flappy.GameSurface.FIXED_HEIGHT;
+import static com.github.alankargupta.flappy.GameSurface.FIXED_WIDTH;
 import static com.github.alankargupta.flappy.GameSurface.SCREEN_HEIGHT;
 import static com.github.alankargupta.flappy.GameSurface.SCREEN_WIDTH;
 
@@ -35,9 +38,7 @@ public class Background extends GameObject {
         canvas.drawBitmap(background,src,dest,null);
         Rect dest2 = new Rect(x+width,y,x+width+width,height);
         canvas.drawBitmap(background,src,dest2,null);
-        if(x<=-width){
-            x+=width;
-        }
+        x=x<=-width?x+width:x;
     }
 
 }
